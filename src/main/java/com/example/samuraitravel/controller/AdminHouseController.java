@@ -2,11 +2,13 @@ package com.example.samuraitravel.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.repository.HouseRepository;
@@ -37,13 +39,19 @@ public class AdminHouseController {
     }	
 //③
     @GetMapping
-    public String index(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {	
-        Page<House> housePage = houseRepository.findAll(pageable);     
+    public String index(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable, @RequestParam(name = "keyword", required = false) String keyword) {	
+        Page<House> housePage;
 //④メソッド内でaddAttribute()メソッドを使い、以下の引数を渡す
 //第1引数：ビュー側から参照する変数名　第2引数：ビューに渡すデータ
+        if(keyword != null && !keyword.isEmpty()) {
+        	housePage = houseRepository.findByNameLike("%" + keyword + "%", pageable);
+        }else {
+        	housePage = houseRepository.findAll(pageable);
+        }
         model.addAttribute("housePage", housePage);
+        model.addAttribute("keyword", keyword);
         
         return "admin/houses/index";
     }  
 }
-
+//
