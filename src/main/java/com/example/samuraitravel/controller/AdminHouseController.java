@@ -2,6 +2,7 @@ package com.example.samuraitravel.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,12 +37,13 @@ public class AdminHouseController {
     }	
 //③
     @GetMapping
-    public String index(Model model, Pageable pageable) {
-    	Page<House> housePage = houseRepository.findAll(pageable);       
+    public String index(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {	
+        Page<House> housePage = houseRepository.findAll(pageable);     
 //④メソッド内でaddAttribute()メソッドを使い、以下の引数を渡す
 //第1引数：ビュー側から参照する変数名　第2引数：ビューに渡すデータ
-        model.addAttribute("houses", housePage);             
+        model.addAttribute("housePage", housePage);
         
         return "admin/houses/index";
     }  
 }
+
