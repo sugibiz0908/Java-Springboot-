@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.samuraitravel.entity.House;
+import com.example.samuraitravel.form.HouseEditForm;
 import com.example.samuraitravel.form.HouseRegisterForm;
 import com.example.samuraitravel.repository.HouseRepository;
 
@@ -44,6 +45,13 @@ public class HouseService {
     house.setPhoneNumber(houseRegisterForm.getPhoneNumber());
                 
     houseRepository.save(house);
+}
+
+@Transactional
+public void update(HouseEditForm houseEditForm) {
+
+	House house = houseRepository.getReferenceById(houseEditForm.getId());
+	MultipartFile imageFile = houseEditForm.getImageFile();
 }
 
 //UUIDを使って生成したファイル名を返す
